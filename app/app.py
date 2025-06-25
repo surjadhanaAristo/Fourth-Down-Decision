@@ -17,8 +17,9 @@ class PlayData(BaseModel):
     game_seconds_remaining: int
     qtr: int
     half_seconds_remaining: int
-    yardline_100: int
     posteam_timeouts_remaining: int
+    yardline_100: int
+    
 
 # Root route to confirm server is up
 @app.get("/")
