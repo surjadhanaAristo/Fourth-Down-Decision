@@ -1,29 +1,15 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from joblib import load
-# Load model
+import pandas as pd  # missing in original
 
+# Load model
 models = load("models/models.pkl")
 
 # Create the app
 app = FastAPI()
 
-# Define the input structure
-class GameData(BaseModel):
-    ydstogo: int
-    score_diff: int
-    game_seconds_remaining: int
-    qtr: int
-    half_seconds_remaining: int
-    yardline_100: int
-    posteam_timeouts_remaining: int
-
-@app.get("/")
-def root():
-    return {"status": "API is up"}
-
-@app.post("/predict")
-# Define expected input fields
+# Define input schema first!
 class PlayData(BaseModel):
     ydstogo: int
     score_diff: int
@@ -33,12 +19,16 @@ class PlayData(BaseModel):
     yardline_100: int
     posteam_timeouts_remaining: int
 
+# Root route to confirm server is up
+@app.get("/")
+def root():
+    return {"status": "API is up"}
+
+# Predict route
 @app.post("/predict")
 def predict(play: PlayData):
-    # Convert to a DataFrame
     pbp = pd.DataFrame([play.dict()])
 
-    # Get predictions
     go_ep   = models["go_ep"].predict(pbp)[0]
     go_epa  = models["go_epa"].predict(pbp)[0]
     go_wp   = models["go_wp"].predict(pbp)[0]
@@ -51,7 +41,6 @@ def predict(play: PlayData):
     fg_epa  = models["field_goal_epa"].predict(pbp)[0]
     fg_wp   = models["field_goal_wp"].predict(pbp)[0]
 
-    # Decide best play by WP
     options = {
         "Go": go_wp,
         "Punt": punt_wp,
