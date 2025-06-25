@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from joblib import load
-import pandas as pd  # missing in original
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 
 # Load model
 models = load("models/models.pkl")
