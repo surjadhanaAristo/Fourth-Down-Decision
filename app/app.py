@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import pickle
+from joblib import load
+# Load model
 
-# Load your model
-model = pickle.load(open("models/models.pkl", "rb"))
+models = load("models/models.pkl")
 
 # Create the app
 app = FastAPI()
