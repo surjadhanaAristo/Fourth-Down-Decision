@@ -13,7 +13,7 @@ app = FastAPI()
 # Define input schema first!
 class PlayData(BaseModel):
     ydstogo: int
-    score_diff: int
+    score_differential: int
     game_seconds_remaining: int
     qtr: int
     half_seconds_remaining: int
