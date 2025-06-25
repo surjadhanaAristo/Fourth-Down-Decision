@@ -28,42 +28,34 @@ def root():
 # Predict route
 @app.post("/predict")
 def predict(play: PlayData):
-    pbp = pd.DataFrame([play.dict()])
+    try:
+        print("Received input:", play.dict())
 
-    go_ep   = models["go_ep"].predict(pbp)[0]
-    go_epa  = models["go_epa"].predict(pbp)[0]
-    go_wp   = models["go_wp"].predict(pbp)[0]
+        pbp = pd.DataFrame([play.dict()])
+        print("DataFrame:", pbp.to_dict())
 
-    punt_ep   = models["punt_ep"].predict(pbp)[0]
-    punt_epa  = models["punt_epa"].predict(pbp)[0]
-    punt_wp   = models["punt_wp"].predict(pbp)[0]
+        go_ep   = models["go_ep"].predict(pbp)[0]
+        go_epa  = models["go_epa"].predict(pbp)[0]
+        go_wp   = models["go_wp"].predict(pbp)[0]
 
-    fg_ep   = models["field_goal_ep"].predict(pbp)[0]
-    fg_epa  = models["field_goal_epa"].predict(pbp)[0]
-    fg_wp   = models["field_goal_wp"].predict(pbp)[0]
+        punt_ep   = models["punt_ep"].predict(pbp)[0]
+        punt_epa  = models["punt_epa"].predict(pbp)[0]
+        punt_wp   = models["punt_wp"].predict(pbp)[0]
 
-    options = {
-        "Go": go_wp,
-        "Punt": punt_wp,
-        "Field Goal": fg_wp
-    }
-    best_play = max(options, key=options.get)
+        fg_ep   = models["field_goal_ep"].predict(pbp)[0]
+        fg_epa  = models["field_goal_epa"].predict(pbp)[0]
+        fg_wp   = models["field_goal_wp"].predict(pbp)[0]
 
-    return {
-        "go": {
-            "ep": go_ep,
-            "epa": go_epa,
-            "wp": go_wp
-        },
-        "punt": {
-            "ep": punt_ep,
-            "epa": punt_epa,
-            "wp": punt_wp
-        },
-        "field_goal": {
-            "ep": fg_ep,
-            "epa": fg_epa,
-            "wp": fg_wp
-        },
-        "recommended_play": best_play
-    }
+        options = {"Go": go_wp, "Punt": punt_wp, "Field Goal": fg_wp}
+        best_play = max(options, key=options.get)
+
+        return {
+            "go": {"ep": go_ep, "epa": go_epa, "wp": go_wp},
+            "punt": {"ep": punt_ep, "epa": punt_epa, "wp": punt_wp},
+            "field_goal": {"ep": fg_ep, "epa": fg_epa, "wp": fg_wp},
+            "recommended_play": best_play
+        }
+
+    except Exception as e:
+        print("Prediction error:", str(e))
+        return {"error": str(e)}
