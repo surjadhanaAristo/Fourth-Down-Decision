@@ -1,0 +1,49 @@
+<form id="form">
+  <input name="ydstogo" placeholder="Yards to go" />
+  <input name="score_diff" placeholder="Score difference" />
+  <input name="game_seconds_remaining" placeholder="Game Seconds Remaining" />
+  <input name="qtr" placeholder="Quarter" />
+  <input name="half_seconds_remaining" placeholder="Half Seconds Remaining" />
+  <input name="yardline_100" placeholder="Yard Line (100)" />
+  <input name="score_diff" placeholder="Score difference" />
+  <input name="posteam_timeouts_remaining" placeholder="Opposing Team Timeouts" />
+
+  <button type="submit">Submit</button>
+</form>
+
+<p id="output"></p>
+
+<script>
+  const form = document.getElementById("form");
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const payload = {
+      ydstogo: parseInt(formData.get("ydstogo")),
+      score_diff: parseInt(formData.get("score_diff")),
+      game_seconds_remaining: parseInt(formData.get("game_seconds_remaining")),
+      qtr: parseInt(formData.get("qtr")),
+      half_seconds_remaining: parseInt(formData.get("half_seconds_remaining")),
+      yardline_100: parseInt(formData.get("yardline_100")),
+      posteam_timeouts_remaining: parseInt(formData.get("posteam_timeouts_remaining")),
+    };
+    const res = await fetch("https://your-api.render.com/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+     try {
+      const res = await fetch("https://your-api.render.com/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      document.getElementById("output").innerText = `Decision: ${data.decision}`;
+    } catch (err) {
+      document.getElementById("output").innerText = "Error: Failed to get prediction.";
+      console.error(err);
+    }
+  };
+</script>
