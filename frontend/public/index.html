@@ -27,13 +27,13 @@
       yardline_100: parseInt(formData.get("yardline_100")),
       posteam_timeouts_remaining: parseInt(formData.get("posteam_timeouts_remaining")),
     };
-    const res = await fetch("https://your-api.render.com/predict", {
+    const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
      try {
-      const res = await fetch("https://your-api.render.com/predict", {
+      const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

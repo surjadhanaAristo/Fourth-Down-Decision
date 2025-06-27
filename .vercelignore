@@ -1,0 +1,6 @@
+models/
+data/
+notebooks/
+*.ipynb
+*.pkl
+__pycache__/

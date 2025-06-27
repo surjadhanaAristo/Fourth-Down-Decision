@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from joblib import load
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-
+from mangum import Mangum
 # Load model
 models = load("models/models.pkl")
 
@@ -60,3 +60,4 @@ def predict(play: PlayData):
     except Exception as e:
         print("Prediction error:", str(e))
         return {"error": str(e)}
+handler = Mangum(app)
