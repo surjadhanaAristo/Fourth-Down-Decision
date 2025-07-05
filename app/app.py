@@ -4,12 +4,25 @@ from joblib import load
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from mangum import Mangum
+from fastapi.middleware.cors import CORSMiddleware
+
 # Load model
 models = load("models/models.pkl")
 
 # Create the app
 app = FastAPI()
 
+origins = [
+    "fourthdownfrontend-8j0cncth6-surjadhanaaristos-projects.vercel.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,            # frontend origins
+    allow_credentials=True,
+    allow_methods=["*"],              # allow all methods: POST, GET, OPTIONS, etc.
+    allow_headers=["*"],              # allow all headers
+)
 # Define input schema first!
 class PlayData(BaseModel):
     ydstogo: int
@@ -22,6 +35,7 @@ class PlayData(BaseModel):
     
 
 # Root route to confirm server is up
+
 @app.get("/")
 def root():
     return {"status": "API is up"}

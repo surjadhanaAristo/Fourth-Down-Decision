@@ -84,8 +84,8 @@
     <input name="game_seconds_remaining" placeholder="Game Seconds Remaining" required />
     <input name="qtr" placeholder="Quarter" required />
     <input name="half_seconds_remaining" placeholder="Half Seconds Remaining" required />
-    <input name="yardline_100" placeholder="Yard Line (100)" required />
     <input name="posteam_timeouts_remaining" placeholder="Opposing Team Timeouts" required />
+    <input name="yardline_100" placeholder="Yard Line (100)" required />
     <button type="submit">Submit</button>
   </form>
 
@@ -102,8 +102,8 @@
         game_seconds_remaining: parseInt(formData.get("game_seconds_remaining")),
         qtr: parseInt(formData.get("qtr")),
         half_seconds_remaining: parseInt(formData.get("half_seconds_remaining")),
-        yardline_100: parseInt(formData.get("yardline_100")),
         posteam_timeouts_remaining: parseInt(formData.get("posteam_timeouts_remaining")),
+        yardline_100: parseInt(formData.get("yardline_100")),
       };
 
       try {
@@ -116,7 +116,7 @@
         const data = await res.json();
         document.getElementById("output").innerText = `📣 Decision: ${data.decision}`;
       } catch (err) {
-        document.getElementById("output").innerText = "❌ Error: Failed to get prediction.";
+        document.getElementById("output").innerText = `❌ Error: Failed to get prediction. error: ${err}`;
         console.error(err);
       }
     };
