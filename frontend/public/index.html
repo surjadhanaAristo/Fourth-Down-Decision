@@ -1,49 +1,106 @@
-<form id="form">
-  <input name="ydstogo" placeholder="Yards to go" />
-  <input name="score_diff" placeholder="Score difference" />
-  <input name="game_seconds_remaining" placeholder="Game Seconds Remaining" />
-  <input name="qtr" placeholder="Quarter" />
-  <input name="half_seconds_remaining" placeholder="Half Seconds Remaining" />
-  <input name="yardline_100" placeholder="Yard Line (100)" />
-  <input name="score_diff" placeholder="Score difference" />
-  <input name="posteam_timeouts_remaining" placeholder="Opposing Team Timeouts" />
-
-  <button type="submit">Submit</button>
-</form>
-
-<p id="output"></p>
-
-<script>
-  const form = document.getElementById("form");
-  form.onsubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const payload = {
-      ydstogo: parseInt(formData.get("ydstogo")),
-      score_diff: parseInt(formData.get("score_diff")),
-      game_seconds_remaining: parseInt(formData.get("game_seconds_remaining")),
-      qtr: parseInt(formData.get("qtr")),
-      half_seconds_remaining: parseInt(formData.get("half_seconds_remaining")),
-      yardline_100: parseInt(formData.get("yardline_100")),
-      posteam_timeouts_remaining: parseInt(formData.get("posteam_timeouts_remaining")),
-    };
-    const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-     try {
-      const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      document.getElementById("output").innerText = `Decision: ${data.decision}`;
-    } catch (err) {
-      document.getElementById("output").innerText = "Error: Failed to get prediction.";
-      console.error(err);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fourth Down Decision</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
     }
-  };
-</script>
+
+    form {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.8rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #output {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="form">
+    <input name="ydstogo" placeholder="Yards to Go" required />
+    <input name="score_diff" placeholder="Score Difference" required />
+    <input name="game_seconds_remaining" placeholder="Game Seconds Remaining" required />
+    <input name="qtr" placeholder="Quarter" required />
+    <input name="half_seconds_remaining" placeholder="Half Seconds Remaining" required />
+    <input name="yardline_100" placeholder="Yard Line (100)" required />
+    <input name="posteam_timeouts_remaining" placeholder="Opposing Team Timeouts" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="output"></p>
+
+  <script>
+    const form = document.getElementById("form");
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const payload = {
+        ydstogo: parseInt(formData.get("ydstogo")),
+        score_diff: parseInt(formData.get("score_diff")),
+        game_seconds_remaining: parseInt(formData.get("game_seconds_remaining")),
+        qtr: parseInt(formData.get("qtr")),
+        half_seconds_remaining: parseInt(formData.get("half_seconds_remaining")),
+        yardline_100: parseInt(formData.get("yardline_100")),
+        posteam_timeouts_remaining: parseInt(formData.get("posteam_timeouts_remaining")),
+      };
+
+      try {
+        const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+        document.getElementById("output").innerText = `Decision: ${data.decision}`;
+      } catch (err) {
+        document.getElementById("output").innerText = "Error: Failed to get prediction.";
+        console.error(err);
+      }
+    };
+  </script>
+
+</body>
+</html>
