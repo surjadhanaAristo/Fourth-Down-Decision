@@ -13,12 +13,12 @@ models = load("models/models.pkl")
 app = FastAPI()
 
 origins = [
-    "fourthdownfrontend-8j0cncth6-surjadhanaaristos-projects.vercel.app"
+    "https://fourthdownfrontend-8j0cncth6-surjadhanaaristos-projects.vercel.app"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,            # frontend origins
+    allow_origins=["*"],            # frontend origins
     allow_credentials=True,
     allow_methods=["*"],              # allow all methods: POST, GET, OPTIONS, etc.
     allow_headers=["*"],              # allow all headers
