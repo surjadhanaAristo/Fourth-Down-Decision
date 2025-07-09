@@ -92,9 +92,14 @@
   <p id="output"></p>
 
   <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded");
+
     const form = document.getElementById("form");
     form.onsubmit = async (e) => {
       e.preventDefault();
+      console.log("Form submit intercepted");
+
       const formData = new FormData(form);
       const payload = {
         ydstogo: parseInt(formData.get("ydstogo")),
@@ -106,6 +111,8 @@
         yardline_100: parseInt(formData.get("yardline_100")),
       };
 
+      console.log("Payload:", payload);
+
       try {
         const res = await fetch("https://fourth-down-decision.onrender.com/predict", {
           method: "POST",
@@ -113,14 +120,21 @@
           body: JSON.stringify(payload),
         });
 
-        const data = await res.json();
-        document.getElementById("output").innerText = `📣 Decision: ${data.decision}`;
+        console.log("Status:", res.status);
+        const text = await res.text();
+        console.log("Raw response text:", text);
+
+        const data = JSON.parse(text);
+        console.log("Parsed response:", data);
+        //options = {"Punt":punt_wp, "Field Goal":fg_wp, "Pass":go_wp}
+        document.getElementById("output").innerText = `📣 Decision: ${data.recommended_play}`;
       } catch (err) {
-        document.getElementById("output").innerText = `❌ Error: Failed to get prediction. error: ${err}`;
+        document.getElementById("output").innerText = `❌ Error: ${err.message}`;
         console.error(err);
       }
     };
-  </script>
+  });
+</script>
 
 </body>
 </html>

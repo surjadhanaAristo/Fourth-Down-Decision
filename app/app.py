@@ -43,12 +43,15 @@ def root():
 # Predict route
 @app.post("/predict")
 def predict(play: PlayData):
+
     try:
+        
         print("Received input:", play.dict())
 
         pbp = pd.DataFrame([play.dict()])
         print("DataFrame:", pbp.to_dict())
-
+        fg_distance = 100 - pbp["yardline_100"].iloc[0]
+        fg_is_realistic = fg_distance < 60
         go_ep   = models["go_ep"].predict(pbp)[0]
         go_epa  = models["go_epa"].predict(pbp)[0]
         go_wp   = models["go_wp"].predict(pbp)[0]
@@ -61,7 +64,9 @@ def predict(play: PlayData):
         fg_epa  = models["field_goal_epa"].predict(pbp)[0]
         fg_wp   = models["field_goal_wp"].predict(pbp)[0]
 
-        options = {"Go": go_wp, "Punt": punt_wp, "Field Goal": fg_wp}
+        options = {"Pass": go_wp, "Punt": punt_wp}
+        if fg_is_realistic:
+            options["Field Goal"] = fg_wp
         best_play = max(options, key=options.get)
 
         return {
