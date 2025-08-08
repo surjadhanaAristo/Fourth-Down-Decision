@@ -50,8 +50,8 @@ def predict(play: PlayData):
 
         pbp = pd.DataFrame([play.dict()])
         print("DataFrame:", pbp.to_dict())
-        fg_distance = 100 - pbp["yardline_100"].iloc[0]
-        fg_is_realistic = fg_distance < 60
+        fg_distance = pbp["yardline_100"].iloc[0]
+        fg_is_realistic = fg_distance <= 60
         go_ep   = models["go_ep"].predict(pbp)[0]
         go_epa  = models["go_epa"].predict(pbp)[0]
         go_wp   = models["go_wp"].predict(pbp)[0]
